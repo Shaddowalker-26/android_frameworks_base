@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2024-2025 PixelOS
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <!-- Paths to the libraries that contain device specific key handlers -->
+    <string-array name="config_deviceKeyHandlerLibs" translatable="false">
+    </string-array>
+
+    <!-- Names of the key handler classes -->
+    <string-array name="config_deviceKeyHandlerClasses" translatable="false">
+    </string-array>
+
+    <!-- Should we listen for fingerprints when the screen is off?  Devices
+         with a rear-mounted sensor want this, but certain devices have
+         the sensor embedded in the power key and listening all the time
+         causes a poor experience. -->
+    <bool name="config_fingerprintWakeAndUnlock">true</bool>
+
+    <!-- Whether to cleanup fingerprints upon connection to the daemon and when user switches -->
+    <bool name="config_cleanupUnusedFingerprints">true</bool>
+
+    <!-- Whether device has an alert slider. -->
+    <bool name="config_hasAlertSlider">false</bool>
+
+    <!-- Whether charging control should be enabled by default -->
+    <bool name="config_chargingControlEnabled">false</bool>
+    <!-- Default charging control mode.
+         This integer should be set to:
+         1 - auto - Use the alarm to calculate the time range when to activate charging control
+         2 - custom - Use time range when the device is usually charging for hours
+         3 - limit - Just limit charging -->
+    <integer name="config_defaultChargingControlMode">1</integer>
+    <!-- Default time when charging control is activated.
+         Represented as seconds from midnight (e.g. 79200 == 10pm). -->
+    <integer name="config_defaultChargingControlStartTime">79200</integer>
+    <!-- Default time when battery will be fully charged.
+         Represented as seconds from midnight (e.g. 21600 == 6am). -->
+    <integer name="config_defaultChargingControlTargetTime">21600</integer>
+    <!-- Default charging limit. -->
+    <integer name="config_defaultChargingControlLimit">80</integer>
+    <!-- Considering the fact that the system might have an incorrect estimation of the time to
+         full. Set a time margin to make the device fully charged before the target time arrives.
+         The unit is minutes and the default value is 30 minutes. If you find that it is not enough
+         to make the device to be fully charged at the target time, increase the value
+    -->
+    <integer name="config_chargingControlTimeMargin">30</integer>
+    <!-- For a device that cannot bypass battery when charging stops (that is, the battery current
+         is 0mA when charging stops), the battery will gradually discharge. So we need to make it
+         recharge when the battery level is lower than a threshold. Set this so that the device
+         will be charged between (limit - val) and limit. -->
+    <integer name="config_chargingControlBatteryRechargeMargin">10</integer>
+    <!-- Some devices might require always setting the toggle instead of set based on current toggle
+    value. If this is the case, set this config to true to let the toggle provider always set
+    charging enabled status regardless of the current status. -->
+    <bool name="config_chargingControlToggleSetAlways">false</bool>
+
+    <!-- Default values for LiveDisplay -->
+    <bool name="config_enableLiveDisplay">true</bool>
+    <integer name="config_dayColorTemperature">6500</integer>
+    <integer name="config_nightColorTemperature">4800</integer>
+    <integer name="config_outdoorAmbientLux">12000</integer>
+    <integer name="config_outdoorAmbientLuxHysteresis">1500</integer>
+    <integer name="config_defaultLiveDisplayMode">2</integer>
+
+    <!-- These values should map to the true min and max
+        that the backend is capable of adjusting to. This
+        is more important when using the ColorBalance mode,
+        as the discrete adjustment is interpolated between
+        this range (with config_dayColorTemperature at zero) -->
+    <integer name="config_minColorTemperature">1000</integer>
+    <integer name="config_maxColorTemperature">10000</integer>
+
+    <bool name="config_defaultAutoContrast">false</bool>
+    <bool name="config_defaultAutoOutdoorMode">true</bool>
+    <bool name="config_defaultColorEnhancement">true</bool>
+    <bool name="config_defaultCABC">true</bool>
+    <bool name="config_defaultAntiFlicker">false</bool>
+
+    <!-- Display mode remapping table.
+        If the mode names returned by the backend do not match
+        the predefined and translated strings in the Settings
+        app, they can be remapped here. The format is
+        "oldname:newname", one per entry. -->
+    <string-array name="config_displayModeMappings" translatable="false" />
+
+    <!-- Should we filter any display modes which are unmapped? -->
+    <bool name="config_filterDisplayModes">false</bool>
+
+    <!-- Build properties from a GMS certified device against current platform SPL level -->
+    <string-array name="config_certifiedBuildProperties" translatable="false">
+      <!--
+        Each entry must be of the format
+            FIELD:value
+        with the field belonging to android.os.Build or android.os.Build.VERSION class.
+        Example:
+        <item>BRAND:foo</item>
+        <item>DEVICE:bar</item>
+        <item>FINGERPRINT:foo/bar/bar:1.0/lorem/ipsum:dolor/sit-amet</item>
+        <item>VERSION.RELEASE:1.0</item>
+      -->
+    </string-array>
+
+    <!-- Keybox configuration for device certification -->
+    <string-array name="config_certifiedKeybox" translatable="false">
+      <!--
+        Keybox entries for EC and RSA keys and certificates.
+        These should be populated with valid data for device certification.
+        <item>EC.PRIV:</item>
+        <item>EC.CERT_1:</item>
+        <item>EC.CERT_2:</item>
+        <item>EC.CERT_3:</item>
+        <item>RSA.PRIV:</item>
+        <item>RSA.CERT_1:</item>
+        <item>RSA.CERT_2:</item>
+        <item>RSA.CERT_3:</item>
+      -->
+    </string-array>
+
+    <!-- Build fingerprint from stock ROM -->
+    <string name="config_stockFingerprint" translatable="false"></string>
+
+    <!-- Device model (Build.MODEL) to spoof for netflix, if not empty -->
+    <string name="config_netflixSpoofModel" translatable="false"></string>
+
+   <!-- API URL to fetch PIF from -->
+   <string name="config_pifUpdateUrl" translatable="false">https://raw.githubusercontent.com/PixelOS-AOSP/official_devices/refs/heads/sixteen/API/updater/CertifiedProps/certified_build_props.json</string>
+
+    <!-- Define device configs on boot -->
+    <string-array name="global_device_configs_override" translatable="false">
+    </string-array>
+    <string-array name="device_configs_override" translatable="false">
+    </string-array>
+</resources>

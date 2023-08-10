@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2024-2025 PixelOS
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <!-- Device keyhandlers -->
+    <java-symbol type="array" name="config_deviceKeyHandlerLibs" />
+    <java-symbol type="array" name="config_deviceKeyHandlerClasses" />
+
+    <!-- Should we listen for fingerprints when the screen is off?  Devices
+         with a rear-mounted sensor want this, but certain devices have
+         the sensor embedded in the power key and listening all the time
+         causes a poor experience. -->
+    <java-symbol type="bool" name="config_fingerprintWakeAndUnlock" />
+
+    <!-- Whether to cleanup fingerprints upon connection to the daemon and when user switches -->
+    <java-symbol type="bool" name="config_cleanupUnusedFingerprints" />
+
+    <!-- App error dialog -->
+     <java-symbol type="id" name="aerr_copy" />
+     <java-symbol type="string" name="url_copy_success" />
+     <java-symbol type="string" name="url_copy_failed" />
+
+    <!-- Alert Slider -->
+    <java-symbol type="string" name="alert_slider_state_path" />
+    <java-symbol type="string" name="alert_slider_uevent_match_path" />
+    <java-symbol type="bool" name="config_hasAlertSlider" />
+ 
+    <!-- Health interface -->
+    <java-symbol type="bool" name="config_chargingControlEnabled" />
+    <java-symbol type="bool" name="config_chargingControlToggleSetAlways" />
+    <java-symbol type="drawable" name="ic_charging_control" />
+    <java-symbol type="integer" name="config_defaultChargingControlMode" />
+    <java-symbol type="integer" name="config_defaultChargingControlStartTime" />
+    <java-symbol type="integer" name="config_defaultChargingControlTargetTime" />
+    <java-symbol type="integer" name="config_defaultChargingControlLimit" />
+    <java-symbol type="integer" name="config_chargingControlTimeMargin" />
+    <java-symbol type="integer" name="config_chargingControlBatteryRechargeMargin" />
+    <java-symbol type="string" name="charging_control_notification_channel" />
+    <java-symbol type="string" name="charging_control_notification_title" />
+    <java-symbol type="string" name="charging_control_notification_cancel_once" />
+    <java-symbol type="string" name="charging_control_notification_content_limit" />
+    <java-symbol type="string" name="charging_control_notification_content_limit_reached" />
+    <java-symbol type="string" name="charging_control_notification_content_target" />
+    <java-symbol type="string" name="charging_control_notification_content_target_reached" />
+
+    <!-- Charging speed -->
+    <java-symbol type="string" name="charging_speed" />
+    <java-symbol type="array" name="charging_speed_entries" />
+    <java-symbol type="array" name="charging_speed_values" />
+
+    <!-- LiveDisplay -->
+    <java-symbol type="string" name="live_display_title" />
+    <java-symbol type="string" name="live_display_hint" />
+    <java-symbol type="string" name="live_display_auto" />
+    <java-symbol type="string" name="live_display_auto_summary" />
+    <java-symbol type="string" name="live_display_day" />
+    <java-symbol type="string" name="live_display_day_summary" />
+    <java-symbol type="string" name="live_display_night" />
+    <java-symbol type="string" name="live_display_night_summary" />
+    <java-symbol type="string" name="live_display_outdoor" />
+    <java-symbol type="string" name="live_display_outdoor_summary" />
+    <java-symbol type="drawable" name="ic_livedisplay_notif" />
+    <java-symbol type="array" name="live_display_announcement" />
+    <java-symbol type="array" name="live_display_description" />
+    <java-symbol type="array" name="live_display_drawables" />
+    <java-symbol type="array" name="live_display_entries" />
+    <java-symbol type="array" name="live_display_summaries" />
+    <java-symbol type="array" name="live_display_values" />
+    <java-symbol type="integer" name="config_dayColorTemperature" />
+    <java-symbol type="integer" name="config_nightColorTemperature" />
+    <java-symbol type="integer" name="config_outdoorAmbientLux" />
+    <java-symbol type="integer" name="config_outdoorAmbientLuxHysteresis" />
+    <java-symbol type="integer" name="config_defaultLiveDisplayMode" />
+    <java-symbol type="integer" name="config_minColorTemperature" />
+    <java-symbol type="integer" name="config_maxColorTemperature" />
+    <java-symbol type="bool" name="config_enableLiveDisplay" />
+    <java-symbol type="bool" name="config_defaultAutoContrast" />
+    <java-symbol type="bool" name="config_defaultAutoOutdoorMode" />
+    <java-symbol type="bool" name="config_defaultColorEnhancement" />
+    <java-symbol type="bool" name="config_defaultCABC" />
+    <java-symbol type="bool" name="config_filterDisplayModes" />
+    <java-symbol type="array" name="config_displayModeMappings" />
+    <java-symbol type="bool" name="config_defaultAntiFlicker" />
+
+    <!-- Prop/KeyboxImitationHooks -->
+    <java-symbol type="array" name="config_certifiedBuildProperties" />
+    <java-symbol type="array" name="config_certifiedKeybox" />
+    <java-symbol type="string" name="config_stockFingerprint" />
+    <java-symbol type="string" name="config_netflixSpoofModel" />
+
+   <!-- API URL to fetch PIF from -->
+   <java-symbol type="string" name="config_pifUpdateUrl" />
+
+    <!-- Define device configs on boot -->
+    <java-symbol type="array" name="global_device_configs_override" />
+    <java-symbol type="array" name="device_configs_override" />
+</resources>
