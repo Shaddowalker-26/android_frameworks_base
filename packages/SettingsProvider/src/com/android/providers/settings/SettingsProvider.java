@@ -345,31 +345,40 @@ public class SettingsProvider extends ContentProvider {
         Settings.System.getCloneFromParentOnValueSettings(sSystemCloneFromParentOnDependency);
     }
 
+    private static final boolean ENABLE_REDACTED_VALUE_FOR_READABLE =
+            android.provider.Flags.enableRedactedValueForReadable();
+
     private static final Set<String> sAllSecureSettings = new ArraySet<>();
     private static final Set<String> sReadableSecureSettings = new ArraySet<>();
     private static final ArrayMap<String, Integer> sReadableSecureSettingsWithMaxTargetSdk =
             new ArrayMap<>();
+    private static final ArrayMap<String, String> sReadableSecureSettingsWithRedactedValue =
+            new ArrayMap<>();
     static {
         Settings.Secure.getPublicSettings(sAllSecureSettings, sReadableSecureSettings,
-                sReadableSecureSettingsWithMaxTargetSdk);
+                sReadableSecureSettingsWithMaxTargetSdk, sReadableSecureSettingsWithRedactedValue);
     }
 
     private static final Set<String> sAllSystemSettings = new ArraySet<>();
     private static final Set<String> sReadableSystemSettings = new ArraySet<>();
     private static final ArrayMap<String, Integer> sReadableSystemSettingsWithMaxTargetSdk =
             new ArrayMap<>();
+    private static final ArrayMap<String, String> sReadableSystemSettingsWithRedactedValue =
+            new ArrayMap<>();
     static {
         Settings.System.getPublicSettings(sAllSystemSettings, sReadableSystemSettings,
-                sReadableSystemSettingsWithMaxTargetSdk);
+                sReadableSystemSettingsWithMaxTargetSdk, sReadableSystemSettingsWithRedactedValue);
     }
 
     private static final Set<String> sAllGlobalSettings = new ArraySet<>();
     private static final Set<String> sReadableGlobalSettings = new ArraySet<>();
     private static final ArrayMap<String, Integer> sReadableGlobalSettingsWithMaxTargetSdk =
             new ArrayMap<>();
+    private static final ArrayMap<String, String> sReadableGlobalSettingsWithRedactedValue =
+            new ArrayMap<>();
     static {
         Settings.Global.getPublicSettings(sAllGlobalSettings, sReadableGlobalSettings,
-                sReadableGlobalSettingsWithMaxTargetSdk);
+                sReadableGlobalSettingsWithMaxTargetSdk, sReadableGlobalSettingsWithRedactedValue);
     }
 
     private final Object mLock = new Object();
@@ -648,7 +657,8 @@ public class SettingsProvider extends ContentProvider {
             case TABLE_GLOBAL -> {
                 if (args.name != null) {
                     Setting setting = getGlobalSetting(args.name);
-                    return packageSettingForQuery(setting, normalizedProjection);
+                    return packageSettingForQuery(setting, normalizedProjection,
+                            sReadableGlobalSettingsWithRedactedValue);
                 } else {
                     return getAllGlobalSettings(projection);
                 }
@@ -657,7 +667,8 @@ public class SettingsProvider extends ContentProvider {
                 final int userId = UserHandle.getCallingUserId();
                 if (args.name != null) {
                     Setting setting = getSecureSetting(args.name, userId, callingDeviceId);
-                    return packageSettingForQuery(setting, normalizedProjection);
+                    return packageSettingForQuery(setting, normalizedProjection,
+                            sReadableSecureSettingsWithRedactedValue);
                 } else {
                     return getAllSecureSettings(userId, Context.DEVICE_ID_DEFAULT, projection);
                 }
@@ -666,7 +677,8 @@ public class SettingsProvider extends ContentProvider {
                 final int userId = UserHandle.getCallingUserId();
                 if (args.name != null) {
                     Setting setting = getSystemSetting(args.name, userId, callingDeviceId);
-                    return packageSettingForQuery(setting, normalizedProjection);
+                    return packageSettingForQuery(setting, normalizedProjection,
+                            sReadableSystemSettingsWithRedactedValue);
                 } else {
                     return getAllSystemSettings(userId, Context.DEVICE_ID_DEFAULT, projection);
                 }
@@ -1528,8 +1540,14 @@ public class SettingsProvider extends ContentProvider {
                     // Caller doesn't have permission to read this setting
                     continue;
                 }
+
                 Setting setting = settingsState.getSettingLocked(name);
-                appendSettingToCursor(result, setting);
+                if (setting == null || setting.isNull()) {
+                    continue;
+                }
+                String value = getEffectiveValue(setting, sReadableGlobalSettingsWithRedactedValue);
+                appendSettingToCursor(result, String.valueOf(setting.getId()), setting.getName(),
+                        value, String.valueOf(setting.isValuePreservedInRestore()));
             }
 
             return result;
@@ -1725,7 +1743,14 @@ public class SettingsProvider extends ContentProvider {
                     setting = mSettingsRegistry.getSettingLocked(SETTINGS_TYPE_SECURE, owningUserId,
                             deviceId, name);
                 }
-                appendSettingToCursor(result, setting);
+
+                if (setting == null || setting.isNull()) {
+                    continue;
+                }
+
+                String value = getEffectiveValue(setting, sReadableSecureSettingsWithRedactedValue);
+                appendSettingToCursor(result, String.valueOf(setting.getId()), setting.getName(),
+                        value, String.valueOf(setting.isValuePreservedInRestore()));
             }
 
             return result;
@@ -1995,7 +2020,12 @@ public class SettingsProvider extends ContentProvider {
 
                 Setting setting = mSettingsRegistry.getSettingLocked(
                         SETTINGS_TYPE_SYSTEM, owningUserId, deviceId, name);
-                appendSettingToCursor(result, setting);
+                if (setting == null || setting.isNull()) {
+                    continue;
+                }
+                String value = getEffectiveValue(setting, sReadableSystemSettingsWithRedactedValue);
+                appendSettingToCursor(result, String.valueOf(setting.getId()), setting.getName(),
+                        value, String.valueOf(setting.isValuePreservedInRestore()));
             }
 
             return result;
@@ -2387,6 +2417,31 @@ public class SettingsProvider extends ContentProvider {
         return mSettingsRegistry.getSettingsNamesLocked(settingsType, userId, deviceId);
     }
 
+    private static String getEffectiveValue(Setting setting,
+            @Nullable ArrayMap<String, String> redactedSettingsMap) {
+        if (setting == null || setting.isNull()) {
+            return null;
+        }
+
+        if (!ENABLE_REDACTED_VALUE_FOR_READABLE) {
+            return setting.getValue();
+        }
+
+        if (redactedSettingsMap == null || redactedSettingsMap.isEmpty()) {
+            return setting.getValue();
+        }
+
+        if (UserHandle.getAppId(Binder.getCallingUid()) < Process.FIRST_APPLICATION_UID) {
+            return setting.getValue();
+        }
+
+        String redactedValue = redactedSettingsMap.get(setting.getName());
+        if (redactedValue != null && !redactedValue.isEmpty()) {
+            return redactedValue;
+        }
+        return setting.getValue();
+    }
+
     private void enforceSettingReadable(String settingName, int settingsType, int userId) {
         if (UserHandle.getAppId(Binder.getCallingUid()) < Process.FIRST_APPLICATION_UID) {
             return;
@@ -2773,8 +2828,10 @@ public class SettingsProvider extends ContentProvider {
             return Bundle.forPair(Settings.NameValueTable.VALUE, setting.getValue());
         }
         Bundle result = new Bundle();
-        result.putString(Settings.NameValueTable.VALUE,
-                (setting != null && !setting.isNull()) ? setting.getValue() : null);
+        ArrayMap<String, String> redactedSettingsMap = getRedactedSettingsMap(type);
+
+        String value = getEffectiveValue(setting, redactedSettingsMap);
+        result.putString(Settings.NameValueTable.VALUE, value);
 
         synchronized (mLock) {
             if ((setting != null && !setting.isNull()) || isSettingPreDefined(name, type)) {
@@ -2788,6 +2845,20 @@ public class SettingsProvider extends ContentProvider {
             }
         }
         return result;
+    }
+
+    @Nullable
+    private static ArrayMap<String, String> getRedactedSettingsMap(int type) {
+        ArrayMap<String, String> redactedSettingsMap = null;
+
+        if (type == SETTINGS_TYPE_GLOBAL && ENABLE_REDACTED_VALUE_FOR_READABLE) {
+            redactedSettingsMap = sReadableGlobalSettingsWithRedactedValue;
+        } else if (type == SETTINGS_TYPE_SECURE && ENABLE_REDACTED_VALUE_FOR_READABLE) {
+            redactedSettingsMap = sReadableSecureSettingsWithRedactedValue;
+        } else if (type == SETTINGS_TYPE_SYSTEM && ENABLE_REDACTED_VALUE_FOR_READABLE) {
+            redactedSettingsMap = sReadableSystemSettingsWithRedactedValue;
+        }
+        return redactedSettingsMap;
     }
 
     private boolean isSettingPreDefined(String name, int type) {
@@ -2983,12 +3054,16 @@ public class SettingsProvider extends ContentProvider {
         throw new IllegalArgumentException("Invalid URI:" + uri);
     }
 
-    private static MatrixCursor packageSettingForQuery(Setting setting, String[] projection) {
+    private static MatrixCursor packageSettingForQuery(Setting setting, String[] projection,
+            ArrayMap<String, String> redactedSettingsMap) {
         if (setting.isNull()) {
             return new MatrixCursor(projection, 0);
         }
+
         MatrixCursor cursor = new MatrixCursor(projection, 1);
-        appendSettingToCursor(cursor, setting);
+        String value = getEffectiveValue(setting, redactedSettingsMap);
+        appendSettingToCursor(cursor, String.valueOf(setting.getId()), setting.getName(), value,
+                String.valueOf(setting.isValuePreservedInRestore()));
         return cursor;
     }
 
@@ -3008,10 +3083,8 @@ public class SettingsProvider extends ContentProvider {
         return projection;
     }
 
-    private static void appendSettingToCursor(MatrixCursor cursor, Setting setting) {
-        if (setting == null || setting.isNull()) {
-            return;
-        }
+    private static void appendSettingToCursor(MatrixCursor cursor, String settingId,
+            String settingName, String settingValue, String isValuePreservedInRestore) {
         final int columnCount = cursor.getColumnCount();
 
         String[] values =  new String[columnCount];
@@ -3021,16 +3094,16 @@ public class SettingsProvider extends ContentProvider {
 
             switch (column) {
                 case Settings.NameValueTable._ID -> {
-                    values[i] = String.valueOf(setting.getId());
+                    values[i] = settingId;
                 }
                 case Settings.NameValueTable.NAME -> {
-                    values[i] = setting.getName();
+                    values[i] = settingName;
                 }
                 case Settings.NameValueTable.VALUE -> {
-                    values[i] = setting.getValue();
+                    values[i] = settingValue;
                 }
                 case Settings.NameValueTable.IS_PRESERVED_IN_RESTORE -> {
-                    values[i] = String.valueOf(setting.isValuePreservedInRestore());
+                    values[i] = isValuePreservedInRestore;
                 }
             }
         }
