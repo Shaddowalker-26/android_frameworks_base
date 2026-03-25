@@ -183,7 +183,7 @@ public class PropImitationHooks {
             return;
         }
 
-        if (sCertifiedProps.length == 0) {
+        if (sCertifiedProps.size() == 0) {
             dlog("Certified props are not set");
             return;
         }

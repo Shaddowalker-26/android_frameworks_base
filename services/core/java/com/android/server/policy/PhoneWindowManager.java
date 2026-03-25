@@ -3252,6 +3252,8 @@ public class PhoneWindowManager implements WindowManagerPolicy {
         mMenuPressAction = Action.MENU;
         mMenuLongPressAction = Action.fromIntSafe(res.getInteger(
                 org.lineageos.platform.internal.R.integer.config_longPressOnMenuBehavior));
+        boolean hasMenu = true;
+        boolean hasAssist = true;
         if (mMenuLongPressAction == Action.NOTHING && (hasMenu && !hasAssist)) {
             mMenuLongPressAction = Action.SEARCH;
         }
@@ -3261,6 +3263,8 @@ public class PhoneWindowManager implements WindowManagerPolicy {
         mAppSwitchLongPressAction = Action.fromIntSafe(res.getInteger(
                 org.lineageos.platform.internal.R.integer.config_longPressOnAppSwitchBehavior));
         mEdgeLongSwipeAction = Action.NOTHING;
+
+        final ContentResolver resolver = mContext.getContentResolver();
 
         mBackLongPressAction = Action.fromSettings(resolver,
                 LineageSettings.System.KEY_BACK_LONG_PRESS_ACTION,
@@ -3289,6 +3293,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                     LineageSettings.System.KEY_ASSIST_LONG_PRESS_ACTION,
                     mAssistLongPressAction);
         }
+        boolean hasAppSwitch = true;
         if (hasAppSwitch) {
             mAppSwitchPressAction = Action.fromSettings(resolver,
                     LineageSettings.System.KEY_APP_SWITCH_ACTION,
@@ -7804,9 +7809,9 @@ public class PhoneWindowManager implements WindowManagerPolicy {
 
         public boolean isAnyCameraInUse() {
             return !mCameraInUse.isEmpty();
+          }
         }
-    private void takeScreenshot(int source)
-    {
-        mScreenshotHelper.takeScreenshot(source, mHandler, null);
-    }
+    private void takeScreenshot(int source){
+      mScreenshotHelper.takeScreenshot(source, mHandler, null);
+  }
 }

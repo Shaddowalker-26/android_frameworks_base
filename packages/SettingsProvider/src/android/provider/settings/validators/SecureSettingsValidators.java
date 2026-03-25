@@ -521,7 +521,7 @@ public class SecureSettingsValidators {
                 new InclusiveIntegerRangeValidator(0, 1));
         VALIDATORS.put(Secure.IDENTITY_CHECK_NOTIFICATION_VIEW_DETAILS_CLICKED,
                 new InclusiveIntegerRangeValidator(0, 1));
-        VALIDATORS.put(Secure.FEATURE_TOUCH_HOVERING, BOOLEAN_VALIDATOR);
+ //       VALIDATORS.put(Secure.FEATURE_TOUCH_HOVERING, BOOLEAN_VALIDATOR);
         VALIDATORS.put(Secure.KEYBOX_DATA, ANY_STRING_VALIDATOR);
     }
 }

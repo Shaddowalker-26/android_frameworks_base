@@ -2859,15 +2859,6 @@ public final class SystemServer implements Dumpable {
             mSystemServiceManager.startService(MediaMetricsManagerService.class);
             t.traceEnd();
 
-            // LineageHardware
-            t.traceBegin("StartLineageHardwareService");
-            mSystemServiceManager.startService(LineageHardwareService.class);
-            t.traceEnd();
-
-            // LiveDisplay
-            t.traceBegin("StartLiveDisplayService");
-            mSystemServiceManager.startService(LiveDisplayService.class);
-            t.traceEnd();
 
             // CustomDeviceConfigService
             t.traceBegin("StartCustomDeviceConfigService");
@@ -2880,10 +2871,6 @@ public final class SystemServer implements Dumpable {
                 mSystemServiceManager.startService(BackgroundInstallControlService.class);
                 t.traceEnd();
             }
-
-            t.traceBegin("StartHealthService");
-            mSystemServiceManager.startService(HealthInterfaceService.class);
-            t.traceEnd();
 
             // AttestationService
             t.traceBegin("AttestationService");
