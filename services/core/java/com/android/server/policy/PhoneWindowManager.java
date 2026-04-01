@@ -7805,6 +7805,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
         public boolean isAnyCameraInUse() {
             return !mCameraInUse.isEmpty();
         }
+      }
     private void takeScreenshot(int source)
     {
         mScreenshotHelper.takeScreenshot(source, mHandler, null);
