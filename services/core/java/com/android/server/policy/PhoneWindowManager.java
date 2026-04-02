@@ -3241,6 +3241,11 @@ public class PhoneWindowManager implements WindowManagerPolicy {
      */
     private void readConfigurationDependentBehaviors() {
         final Resources res = mContext.getResources();
+        final ContentResolver resolver = mContext.getContentResolver();
+
+        final boolean hasMenu = true;
+        final boolean hasAssist = true;
+        final boolean hasAppSwitch = true;
 
         // Initialize all assignments to sane defaults.
         mBackLongPressAction = Action.fromIntSafe(res.getInteger(
@@ -3252,6 +3257,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
         mMenuPressAction = Action.MENU;
         mMenuLongPressAction = Action.fromIntSafe(res.getInteger(
                 org.lineageos.platform.internal.R.integer.config_longPressOnMenuBehavior));
+        
         if (mMenuLongPressAction == Action.NOTHING && (hasMenu && !hasAssist)) {
             mMenuLongPressAction = Action.SEARCH;
         }
@@ -3261,7 +3267,6 @@ public class PhoneWindowManager implements WindowManagerPolicy {
         mAppSwitchLongPressAction = Action.fromIntSafe(res.getInteger(
                 org.lineageos.platform.internal.R.integer.config_longPressOnAppSwitchBehavior));
         mEdgeLongSwipeAction = Action.NOTHING;
-
         mBackLongPressAction = Action.fromSettings(resolver,
                 LineageSettings.System.KEY_BACK_LONG_PRESS_ACTION,
                 mBackLongPressAction);

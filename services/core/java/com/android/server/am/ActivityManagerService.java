@@ -816,6 +816,11 @@ public class ActivityManagerService extends IActivityManager.Stub
         sThreadPriorityBooster.reset();
     }
 
+    @Override
+    public boolean shouldForceCutoutFullscreen(String packageName) {
+    return false;
+    }
+
     private static ThreadPriorityBooster sProcThreadPriorityBooster = new ThreadPriorityBooster(
             THREAD_PRIORITY_FOREGROUND, LockGuard.INDEX_PROC);
 
