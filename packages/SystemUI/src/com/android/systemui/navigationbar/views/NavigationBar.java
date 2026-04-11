@@ -181,6 +181,14 @@ import java.util.concurrent.Executor;
 
 import javax.inject.Inject;
 
+import android.os.UserHandle;
+import android.provider.Settings;
+import android.net.Uri;
+import android.database.ContentObserver;
+import android.os.Handler;
+import android.os.Looper;
+
+
 /**
  * Contains logic for a navigation bar view.
  */
@@ -243,6 +251,7 @@ public class NavigationBar extends ViewController<NavigationBarView> implements 
     private EdgeBackGestureHandler mEdgeBackGestureHandler;
     private NavigationBarFrame mFrame;
     private MotionEvent mCurrentDownEvent;
+    private ContentObserver mNavBarObserver;
 
     private @WindowVisibleState int mNavigationBarWindowState = WINDOW_STATE_SHOWING;
     private final Runnable mAutoHideNavigationHandle = () -> {

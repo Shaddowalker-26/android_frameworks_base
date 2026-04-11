@@ -125,7 +125,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.Executor;
 import java.util.function.Consumer;
-
+import android.annotation.SuppressLint;
 /**
  * The Settings provider contains global system-level device preferences.
  */
@@ -4281,7 +4281,7 @@ public final class Settings {
          */
         public static final Uri CONTENT_URI =
             Uri.parse("content://" + AUTHORITY + "/system");
-
+ 
         @UnsupportedAppUsage(maxTargetSdk = Build.VERSION_CODES.R, trackingBug = 170729553)
         private static final ContentProviderHolder sProviderHolder =
                 new ContentProviderHolder(CONTENT_URI);
@@ -7144,15 +7144,16 @@ public final class Settings {
         public static final String ENABLE_ROTATION_BUTTON = "enable_rotation_button";
 
 	/**
-          * boolean value. toggles swipe up hint in gestural nav mode
-          * @hide
-          */
-         public static final String NAVIGATION_BAR_HINT = "navigation_bar_hint";
+         * @hide
+         */
+        @SuppressLint({"NoSettingsProvider", "UnflaggedApi"})
+        public static final String NAVIGATION_BAR_HINT = "navigation_bar_hint";
 
         /**
-          * Whether to enable taskbar.
-          */
-         public static final String ENABLE_TASKBAR = "enable_taskbar";
+         * @hide
+         */
+        @SuppressLint({"NoSettingsProvider", "UnflaggedApi"})
+        public static final String ENABLE_TASKBAR = "enable_taskbar";
 
         /**
          * Gesture navbar length mode.
@@ -7162,9 +7163,9 @@ public final class Settings {
         public static final String GESTURE_NAVBAR_LENGTH_MODE = "gesture_navbar_length_mode";
 
         /**
-         * Gesture navbar auto-hide mode.
          * @hide
          */
+        @SuppressLint({"NoSettingsProvider", "UnflaggedApi"})
         public static final String GESTURE_NAVBAR_AUTO_HIDE = "gesture_navbar_auto_hide";
 
         /** @hide */
@@ -7440,7 +7441,7 @@ public final class Settings {
          * Whether to take partial screenshot with volume down + power click.
          * @hide
 	 */
-        public static final String CLICK_PARTIAL_SCREENSHOT = "click_partial_screenshot";
+        
 
         /**
          * Three Finger Gesture from Oppo
@@ -7948,6 +7949,12 @@ public final class Settings {
          */
         public static final Uri CONTENT_URI =
             Uri.parse("content://" + AUTHORITY + "/secure");
+               /**
+         * Navigation bar layout mode.
+         * @hide
+         */
+        public static final String NAVBAR_LAYOUT_MODE = "navbar_layout_mode";
+ 
 
         @UnsupportedAppUsage(maxTargetSdk = Build.VERSION_CODES.R, trackingBug = 170729553)
         private static final ContentProviderHolder sProviderHolder =
