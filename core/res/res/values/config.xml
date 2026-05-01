@@ -2919,7 +2919,7 @@
     <string-array name="config_loggable_dream_prefixes"></string-array>
 
     <!-- Whether to enable glanceable hub features on this device. -->
-    <bool name="config_glanceableHubEnabled">false</bool>
+    <bool name="config_glanceableHubEnabled">true</bool>
 
     <!-- ComponentName of a dream to show whenever the system would otherwise have
          gone to sleep.  When the PowerManager is asked to go to sleep, it will instead
