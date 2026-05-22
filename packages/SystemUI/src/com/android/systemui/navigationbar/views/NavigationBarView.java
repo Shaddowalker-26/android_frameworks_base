@@ -1158,46 +1158,36 @@ public class NavigationBarView extends FrameLayout {
     }
 
     @Override
-public WindowInsets onApplyWindowInsets(WindowInsets insets) {
-    int leftInset = insets.getSystemWindowInsetLeft();
-    int rightInset = insets.getSystemWindowInsetRight();
-    int bottomInset = insets.getSystemWindowInsetBottom();
+    public WindowInsets onApplyWindowInsets(WindowInsets insets) {
+        int leftInset = insets.getSystemWindowInsetLeft();
+        int rightInset = insets.getSystemWindowInsetRight();
+        setPadding(leftInset, insets.getSystemWindowInsetTop(), rightInset,
+                insets.getSystemWindowInsetBottom());
+        // we're passing the insets onto the gesture handler since the back arrow is only
+        // conditionally added and doesn't always get all the insets.
+        mEdgeBackGestureHandler.setInsets(leftInset, rightInset);
 
-    // Always update gesture handler FIRST
-    mEdgeBackGestureHandler.setInsets(leftInset, rightInset);
+        // this allows assist handle to be drawn outside its bound so that it can align screen
+        // bottom by translating its y position.
+        final boolean shouldClip =
+                !isGesturalMode(mNavBarMode) || insets.getSystemWindowInsetBottom() == 0;
+        setClipChildren(shouldClip);
+        setClipToPadding(shouldClip);
 
-    // Ignore invalid early boot inset (fixes reboot jump)
-    if (!isLaidOut() && bottomInset == 0) {
-        return insets;
+        return super.onApplyWindowInsets(insets);
     }
 
-    // Ignore redundant updates (prevents flicker / jitter)
-    if (bottomInset == getPaddingBottom() && leftInset == getPaddingLeft()) {
-        return insets;
+    void addPipExclusionBoundsChangeListener(Pip pip) {
+        pip.addPipExclusionBoundsChangeListener(mPipListener);
     }
 
-    setPadding(leftInset, insets.getSystemWindowInsetTop(), rightInset, bottomInset);
+    void removePipExclusionBoundsChangeListener(Pip pip) {
+        pip.removePipExclusionBoundsChangeListener(mPipListener);
+    }
 
-    final boolean shouldClip =
-            !isGesturalMode(mNavBarMode) || bottomInset == 0;
-
-    setClipChildren(shouldClip);
-    setClipToPadding(shouldClip);
-
-    return super.onApplyWindowInsets(insets);
-}
-
-void addPipExclusionBoundsChangeListener(Pip pip) {
-    pip.addPipExclusionBoundsChangeListener(mPipListener);
-}
-
-void removePipExclusionBoundsChangeListener(Pip pip) {
-    pip.removePipExclusionBoundsChangeListener(mPipListener);
-}
-
-void registerBackAnimation(BackAnimation backAnimation) {
-    mEdgeBackGestureHandler.setBackAnimation(backAnimation);
-}
+    void registerBackAnimation(BackAnimation backAnimation) {
+        mEdgeBackGestureHandler.setBackAnimation(backAnimation);
+    }
 
     private static void dumpButton(PrintWriter pw, String caption, ButtonDispatcher button) {
         pw.print("      " + caption + ": ");
