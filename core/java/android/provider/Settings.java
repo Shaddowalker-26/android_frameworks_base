@@ -7165,8 +7165,6 @@ public final class Settings {
         /**
          * @hide
          */
-        @SuppressLint({"NoSettingsProvider", "UnflaggedApi"})
-        public static final String GESTURE_NAVBAR_AUTO_HIDE = "gesture_navbar_auto_hide";
 
         /** @hide */
         public static final String BACK_GESTURE_HEIGHT = "back_gesture_height";
@@ -7450,6 +7448,7 @@ public final class Settings {
         public static final String THREE_FINGER_GESTURE = "three_finger_gesture";
 
         /**
+>>>>>>> 38627caa1e6d (base: Add three-fingers-swipe to screenshot [1/2])
          * These are all public system settings
          *
          * @hide
