@@ -828,6 +828,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
 
     private boolean mLongSwipeDown;
     private CameraAvailbilityListener mCameraAvailabilityListener;
+    private ScreenshotHelper mScreenshotHelper;
 
     private SwipeToScreenshotListener mSwipeToScreenshot;
     private ScreenshotHelper mScreenshotHelper;
@@ -2326,6 +2327,10 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                 break;
             case PLAY_PAUSE_MUSIC:
                 triggerVirtualKeypress(KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE);
+                break;
+            case SCREENSHOT:
+                takeScreenshot(SCREENSHOT_KEY_OTHER);
+                notifyKeyGestureCompleted(event, KeyGestureEvent.KEY_GESTURE_TYPE_TAKE_SCREENSHOT);
                 break;
             default:
                 break;
@@ -7848,6 +7853,10 @@ public class PhoneWindowManager implements WindowManagerPolicy {
       }
     private void takeScreenshot(int source)
     {
+        mScreenshotHelper.takeScreenshot(source, mHandler, null);
+    }
+
+    private void takeScreenshot(int source) {
         mScreenshotHelper.takeScreenshot(source, mHandler, null);
     }
 }
