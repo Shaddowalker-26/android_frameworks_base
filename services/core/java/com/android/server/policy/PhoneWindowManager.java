@@ -831,7 +831,6 @@ public class PhoneWindowManager implements WindowManagerPolicy {
     private ScreenshotHelper mScreenshotHelper;
 
     private SwipeToScreenshotListener mSwipeToScreenshot;
-    private ScreenshotHelper mScreenshotHelper;
 
     private class PolicyHandler extends Handler {
 
@@ -7853,10 +7852,6 @@ public class PhoneWindowManager implements WindowManagerPolicy {
       }
     private void takeScreenshot(int source)
     {
-        mScreenshotHelper.takeScreenshot(source, mHandler, null);
-    }
-
-    private void takeScreenshot(int source) {
         mScreenshotHelper.takeScreenshot(source, mHandler, null);
     }
 }
