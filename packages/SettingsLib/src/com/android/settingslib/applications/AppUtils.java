@@ -326,31 +326,4 @@ public class AppUtils {
         }
         return -1;
     }
-    /**
- * Returns list of cloneable user apps.
- * PixelOS compatibility helper.
- */
-public static List<String> getCloneableAppList(Context context) {
-    final PackageManager pm = context.getPackageManager();
-    final List<PackageInfo> installed =
-            pm.getInstalledPackages(PackageManager.MATCH_ALL);
-    final List<String> cloneable = new ArrayList<>();
-
-    for (PackageInfo pkg : installed) {
-        if (pkg == null || pkg.applicationInfo == null) continue;
-
-        // Skip system apps
-        if ((pkg.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0) {
-            continue;
-        }
-
-        // Skip overlays
-        if (pkg.applicationInfo.isResourceOverlay()) {
-            continue;
-        }
-
-        cloneable.add(pkg.packageName);
-    }
-    return cloneable;
-}
 }
