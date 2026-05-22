@@ -192,31 +192,8 @@ public class OmniJawsClient {
             Log.e(TAG, "queryWeather: settings", e);
         }
 
-        if (mCachedInfo != null) {
-            try (Cursor hourlyCursor = context.getContentResolver().query(
-                    HOURLY_URI, null, null, null, null)) {
-                if (hourlyCursor != null && hourlyCursor.getCount() > 0) {
-                    List<HourlyForecast> hourly = new ArrayList<>();
-                    while (hourlyCursor.moveToNext()) {
-                        HourlyForecast h = new HourlyForecast();
-                        h.temperature = hourlyCursor.getFloat(hourlyCursor.getColumnIndex("hourly_temperature"));
-                        h.conditionCode = hourlyCursor.getInt(hourlyCursor.getColumnIndex("hourly_condition_code"));
-                        h.condition = hourlyCursor.getString(hourlyCursor.getColumnIndex("hourly_condition"));
-                        h.timestamp = hourlyCursor.getLong(hourlyCursor.getColumnIndex("hourly_timestamp"));
-                        h.humidity = hourlyCursor.getFloat(hourlyCursor.getColumnIndex("hourly_humidity"));
-                        h.windSpeed = hourlyCursor.getFloat(hourlyCursor.getColumnIndex("hourly_wind_speed"));
-                        hourly.add(h);
-                    }
-                    mCachedInfo.hourlyForecasts = hourly;
-                }
-            } catch (Exception e) {
-                Log.e(TAG, "queryWeather: hourly", e);
-            }
-        }
-
         updateSettings(context);
     }
-
     private void updateSettings(Context context) {
         String iconPack = (mCachedInfo != null) ? mCachedInfo.iconPack : null;
         if (iconPack == null || TextUtils.isEmpty(iconPack)) {

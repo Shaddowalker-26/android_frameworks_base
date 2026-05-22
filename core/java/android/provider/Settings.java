@@ -7150,11 +7150,6 @@ public final class Settings {
          public static final String NAVIGATION_BAR_HINT = "navigation_bar_hint";
 
         /**
-          * Whether to enable taskbar.
-          */
-         public static final String ENABLE_TASKBAR = "enable_taskbar";
-
-        /**
          * Gesture navbar length mode.
          * Supported modes: 0 for short length, 1 for normal and 2 for long.
          * @hide
