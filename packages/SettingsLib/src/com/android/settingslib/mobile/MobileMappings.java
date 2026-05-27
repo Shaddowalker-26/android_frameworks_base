@@ -141,8 +141,8 @@ public class MobileMappings {
             hGroup = TelephonyIcons.FOUR_G;
             hPlusGroup = TelephonyIcons.FOUR_G;
         } else if (config.hspaDataDistinguishable) {
-            hGroup = TelephonyIcons.H;
-            hPlusGroup = TelephonyIcons.H_PLUS;
+            hGroup = TelephonyIcons.THREE_G;
+            hPlusGroup = TelephonyIcons.THREE_G;
         }
 
         networkToIconLookup.put(toIconKey(TelephonyManager.NETWORK_TYPE_HSDPA), hGroup);
