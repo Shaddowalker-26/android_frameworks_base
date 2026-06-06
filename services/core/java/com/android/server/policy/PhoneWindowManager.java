@@ -2633,8 +2633,8 @@ public class PhoneWindowManager implements WindowManagerPolicy {
 
         mHandler = new PolicyHandler(injector.getLooper());
         mScreenshotHelper = new ScreenshotHelper(mContext);
-        mSwipeToScreenshot = new SwipeToScreenshotListener(mContext, () -> takeScreenshot(
-                SCREENSHOT_KEY_OTHER));
+        mSwipeToScreenshot = new SwipeToScreenshotListener(mContext, () ->
+        takeScreenshot(TAKE_SCREENSHOT_FULLSCREEN, SCREENSHOT_KEY_OTHER));
         mWakeGestureListener = new MyWakeGestureListener(mContext, mHandler);
         mSettingsObserver = new SettingsObserver(mHandler);
         mSettingsObserver.observe();
