@@ -3292,6 +3292,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
         final boolean hasAppSwitch = (activeHardwareKeys & KEY_MASK_APP_SWITCH) != 0;
 
         final ContentResolver resolver = mContext.getContentResolver();
+        readConfigurationDependentBehaviors();
    }
     private void enableSwipeThreeFingerGesture(boolean enable){
         if (enable) {

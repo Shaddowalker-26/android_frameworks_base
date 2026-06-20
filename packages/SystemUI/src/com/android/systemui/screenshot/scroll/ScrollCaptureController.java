@@ -307,15 +307,16 @@ public class ScrollCaptureController {
         mTileFuture = mSession.requestTile(topPx);
         mTileFuture.addListener(() -> {
             try {
-                onCaptureResult(mTileFuture.get());
-            } catch (CancellationException e) {
-                Log.e(TAG, "requestTile cancelled");
-            } catch (InterruptedException | ExecutionException e) {
-                Log.e(TAG, "requestTile failed!", e);
-                if (mCaptureCompleter != null) {
-                    mCaptureCompleter.setException(e);
-                }
-            }
+    onCaptureResult(mTileFuture.get());
+} catch (CancellationException e) {
+    Log.w(TAG, "requestTile cancelled safely");
+    return;
+} catch (InterruptedException | ExecutionException e) {
+    Log.e(TAG, "requestTile failed!", e);
+    if (mCaptureCompleter != null) {
+        mCaptureCompleter.setException(e);
+    }
+}
         }, mBgExecutor);
     }
 
